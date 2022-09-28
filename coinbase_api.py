@@ -1,10 +1,9 @@
 
 import requests
-import json
-import csv
 import apikey
 import time
 import pandas as pd
+import datetime
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 parameters = {
   'start':'1',
@@ -40,6 +39,8 @@ def api_pull_coinbase():
 
         dict = {'coin': symbol_coin, 'price': price_usd , 'percent change 24h': percent_change_24h, 'percent change 7d': percent_change_7d} 
         df = pd.DataFrame(dict)   
+        df['date_time'] = pd.to_datetime('now').strftime("%Y-%m-%d %H:%M:%S")
+        print(df)
         #csv_writer.writerow([symbol_coin, price_usd, percent_change_24h, percent_change_7d])
       
         df.to_csv('file_name.csv', mode='a+', index=False, header=False)    
@@ -47,13 +48,12 @@ def api_pull_coinbase():
       
 
     
-# def auto_repeat():
-#     i = 0
-#     while i < 1:
-#         api_pull_coinbase()
-#         print("Api Pull done")
-#         time.sleep(2)
+def auto_repeat():
+    while 0 < 1:
+        api_pull_coinbase()
+        print("Api Pull done")
+        time.sleep(10)
 
-api_pull_coinbase()
+auto_repeat()
 
 
