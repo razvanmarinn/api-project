@@ -4,6 +4,7 @@ import json
 import csv
 import apikey
 import time
+import pandas as pd
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 parameters = {
   'start':'1',
@@ -19,8 +20,8 @@ headers = {
 
 def api_pull_coinbase():
 
-    File = open("title.txt", "a+" , encoding='utf8')
-    csv_writer = csv.writer(File)
+    #File = open("title.txt", "a+" , encoding='utf8')
+    #csv_writer = csv.writer(File)
     json = requests.get(url, params= parameters, headers = headers).json()
 
 
@@ -31,28 +32,28 @@ def api_pull_coinbase():
         price_usd = []
         percent_change_24h = []
         percent_change_7d = []
+
         symbol_coin.append(x['symbol']) 
         price_usd.append(x['quote']['USD']['price'])
-        # print(x['symbol'],'\n',x['quote']['USD']['price'])
-
         percent_change_24h.append(x['quote']['USD']['percent_change_24h'])
-        # print(x['quote']['USD']['percent_change_24h'], '% IN 24H')
-
         percent_change_7d.append(x['quote']['USD']['percent_change_7d'])
-        # print(x['quote']['USD']['percent_change_7d'], '% IN 7d')
-        print(symbol_coin, price_usd,percent_change_24h,percent_change_7d)
 
+        dict = {'coin': symbol_coin, 'price': price_usd , 'percent change 24h': percent_change_24h, 'percent change 7d': percent_change_7d} 
+        df = pd.DataFrame(dict)   
+        #csv_writer.writerow([symbol_coin, price_usd, percent_change_24h, percent_change_7d])
+      
+        df.to_csv('file_name.csv', mode='a+', index=False, header=False)    
+       
+      
 
     
-        csv_writer.writerow([symbol_coin, price_usd, percent_change_24h, percent_change_7d])
+# def auto_repeat():
+#     i = 0
+#     while i < 1:
+#         api_pull_coinbase()
+#         print("Api Pull done")
+#         time.sleep(2)
 
-def auto_repeat():
-    i = 0
-    while i < 1:
-        api_pull_coinbase()
-        print("Api Pull done")
-        time.sleep(2)
-
-auto_repeat()
+api_pull_coinbase()
 
 
