@@ -3,3 +3,7 @@
 apikey.py
 # ignore ALL files in ANY directory named temp
 temp/
+Lib/
+Scripts/
+Include/
+__pycache__/
