@@ -1,13 +1,15 @@
-
 import requests
 import apikey
 import time
 import pandas as pd
 import datetime
+
+
+
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 parameters = {
   'start':'1',
-  'limit':'3000',
+  'limit':'3',
   'convert':'USD'
 }
 headers = {
@@ -19,14 +21,13 @@ headers = {
 
 def api_pull_coinbase():
 
-    #File = open("title.txt", "a+" , encoding='utf8')
-    #csv_writer = csv.writer(File)
+  
     json = requests.get(url, params= parameters, headers = headers).json()
 
 
     coins = json['data']
     for x in coins:
-        if x['symbol'] == 'DOGE' or x['symbol'] == 'ETH' or x['symbol'] == 'SHIB':
+        if x['symbol'] == 'ETH' or x['symbol'] == 'BTC':
           symbol_coin =[]
           price_usd = []
           percent_change_24h = []
@@ -39,13 +40,15 @@ def api_pull_coinbase():
 
           dict = {'coin': symbol_coin, 'price': price_usd , 'percent change 24h': percent_change_24h, 'percent change 7d': percent_change_7d} 
           df = pd.DataFrame(dict)   
-          df['date_time'] = pd.to_datetime('now').strftime("%Y-%m-%d %H:%M:")
+          df['date_time'] = pd.to_datetime('now').strftime("%Y-%m-%d %H:%M")
           print(df)
-          #csv_writer.writerow([symbol_coin, price_usd, percent_change_24h, percent_change_7d])
-        
-          df.to_csv('csv/file_name.csv', mode='a+', index=False, header=False)    
+
+          
+          df.to_csv("s3://apache-airflow-s3-razvan/file_name.csv", mode='w', index=False, header=False)    
+          
        
-      
 
 
+
+api_pull_coinbase()
 
