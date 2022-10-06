@@ -40,4 +40,4 @@ run_etl_coinbase = PythonOperator(
     python_callable = api_pull_coinbase,
     dag=dag,
 )
-run_etl_coinbase
+run_etl_coinbase >> run_etl_twitter_btc >> run_etl_twitter_eth
