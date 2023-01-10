@@ -27,24 +27,18 @@ def api_pull_coinbase():
 
     coins = json['data']
     for x in coins:
-        if x['symbol'] == 'ETH' or x['symbol'] == 'BTC':
-          symbol_coin =[]
-          price_usd = []
-          percent_change_24h = []
-          percent_change_7d = []
+        if x['symbol'] in ['ETH', 'BTC']:
+            symbol_coin = [x['symbol']]
+            price_usd = [x['quote']['USD']['price']]
+            percent_change_24h = [x['quote']['USD']['percent_change_24h']]
+            percent_change_7d = [x['quote']['USD']['percent_change_7d']]
+            dict = {'coin': symbol_coin, 'price': price_usd , 'percent change 24h': percent_change_24h, 'percent change 7d': percent_change_7d}
+            df = pd.DataFrame(dict)
+            df['date_time'] = pd.to_datetime('now').strftime("%Y-%m-%d %H:%M")
+            print(df)
 
-          symbol_coin.append(x['symbol']) 
-          price_usd.append(x['quote']['USD']['price'])
-          percent_change_24h.append(x['quote']['USD']['percent_change_24h'])
-          percent_change_7d.append(x['quote']['USD']['percent_change_7d'])
 
-          dict = {'coin': symbol_coin, 'price': price_usd , 'percent change 24h': percent_change_24h, 'percent change 7d': percent_change_7d} 
-          df = pd.DataFrame(dict)   
-          df['date_time'] = pd.to_datetime('now').strftime("%Y-%m-%d %H:%M")
-          print(df)
-
-          
-          df.to_csv("s3://apache-airflow-s3-razvan/file_name.csv", mode='w', index=False, header=False)    
+            df.to_csv("s3://apache-airflow-s3-razvan/file_name.csv", mode='w', index=False, header=False)    
           
        
 
