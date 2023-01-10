@@ -11,7 +11,7 @@ search_term = ['bitcoin', 'eth', 'egld']
 class MyStreaming(tweepy.StreamingClient):
 
     def on_tweet(self, tweet):
-        if tweet.referenced_tweets == None:
+        if tweet.referenced_tweets is None:
             print(tweet.text)
             time.sleep(0.2)
             
